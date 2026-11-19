@@ -116,7 +116,20 @@
         <div class="start-foot">
           <div class="start-actions">
             <button id="launch" class="primary-button" type="button">Launch the ball</button>
+            <button
+              id="daily"
+              class="ghost-button daily-button"
+              type="button"
+              title="Play today's city"
+            >
+              <span class="daily-dot" aria-hidden="true"></span>
+              Daily run
+            </button>
             <span id="start-seed" class="seed-inline">City: ...</span>
+          </div>
+          <div id="recent-cities" class="recent" role="group" aria-label="Recent cities" hidden>
+            <span class="recent-label">Recent cities</span>
+            <div id="recent-list" class="recent-list"></div>
           </div>
           <ul class="controls">
             <li><kbd>Move</kbd><span>Steer</span></li>

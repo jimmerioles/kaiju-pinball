@@ -70,3 +70,10 @@ export function makeSeed(): string {
   const number = Math.floor(Math.random() * 90) + 10;
   return `${adjective}-${noun}-${number}`;
 }
+
+export function dailySeed(date = new Date()): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `daily-${year}-${month}-${day}`;
+}

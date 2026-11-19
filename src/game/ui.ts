@@ -5,6 +5,8 @@ export interface UICallbacks {
   onLaunch: () => void;
   onReplay: () => void;
   onSameCity: () => void;
+  onDaily: () => void;
+  onRecentSeed: (seed: string) => void;
   onMute: () => void;
   onCopySeed: () => void;
 }
@@ -39,6 +41,8 @@ export class UI {
   private readonly seedLabelEl: HTMLElement;
   private readonly startSeedEl: HTMLElement;
   private readonly endSeedEl: HTMLElement;
+  private readonly recentCitiesEl: HTMLElement;
+  private readonly recentListEl: HTMLElement;
 
   private readonly endTitleEl: HTMLElement;
   private readonly endScoreEl: HTMLElement;
@@ -50,6 +54,7 @@ export class UI {
   private readonly launchButton: HTMLButtonElement;
   private readonly replayButton: HTMLButtonElement;
   private readonly sameCityButton: HTMLButtonElement;
+  private readonly dailyButton: HTMLButtonElement;
   private readonly muteButton: HTMLButtonElement;
   private readonly copySeedButton: HTMLButtonElement;
 
@@ -75,6 +80,8 @@ export class UI {
     this.seedLabelEl = this.byId('seed-label');
     this.startSeedEl = this.byId('start-seed');
     this.endSeedEl = this.byId('end-seed');
+    this.recentCitiesEl = this.byId('recent-cities');
+    this.recentListEl = this.byId('recent-list');
 
     this.endTitleEl = this.byId('end-title');
     this.endScoreEl = this.byId('end-score');
@@ -86,6 +93,7 @@ export class UI {
     this.launchButton = this.byId<HTMLButtonElement>('launch');
     this.replayButton = this.byId<HTMLButtonElement>('replay');
     this.sameCityButton = this.byId<HTMLButtonElement>('same-city');
+    this.dailyButton = this.byId<HTMLButtonElement>('daily');
     this.muteButton = this.byId<HTMLButtonElement>('mute');
     this.copySeedButton = this.byId<HTMLButtonElement>('copy-seed');
 
@@ -95,6 +103,7 @@ export class UI {
     this.launchButton.addEventListener('click', () => this.callbacks.onLaunch());
     this.replayButton.addEventListener('click', () => this.callbacks.onReplay());
     this.sameCityButton.addEventListener('click', () => this.callbacks.onSameCity());
+    this.dailyButton.addEventListener('click', () => this.callbacks.onDaily());
     this.muteButton.addEventListener('click', () => this.callbacks.onMute());
     this.copySeedButton.addEventListener('click', () => this.callbacks.onCopySeed());
   }
@@ -129,6 +138,22 @@ export class UI {
     this.seedLabelEl.textContent = label;
     this.startSeedEl.textContent = label;
     this.endSeedEl.textContent = label;
+  }
+
+  setRecentSeeds(seeds: string[]): void {
+    this.recentListEl.replaceChildren();
+    this.recentCitiesEl.hidden = seeds.length === 0;
+
+    for (const seed of seeds) {
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.className = 'seed-chip';
+      button.textContent = seed;
+      button.title = `Play ${seed}`;
+      button.setAttribute('aria-label', `Play city ${seed}`);
+      button.addEventListener('click', () => this.callbacks.onRecentSeed(seed));
+      this.recentListEl.appendChild(button);
+    }
   }
 
   showStart(): void {

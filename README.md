@@ -38,6 +38,10 @@ npm run preview
 
 The city is generated from a seed. The current seed appears in the HUD and on the end screen. Add `?seed=peach-harbor-42` to the URL to revisit a city, or use **Copy city link** after a run.
 
+**Daily run** on the start screen loads a city seeded from today's local date. It changes at midnight and shares like any other seed.
+
+The start screen also keeps the five most recent cities launched on this browser. Pick one to play it again.
+
 ## Screens
 
 | Gameplay                                    | End of a run                                    |
@@ -63,7 +67,7 @@ npm run format  # Prettier
 - A small custom ball integrator with fixed 120 Hz substeps and sphere versus AABB collisions.
 - Instanced shards, shader particle pools for sparks and dust, additive shockwave rings, and synthesized Web Audio impacts.
 - `EffectComposer` with bloom, a vignette, and film grain.
-- A DOM HUD over a single WebGL canvas, with shareable seeds and a local best score.
+- A DOM HUD over a single WebGL canvas, with shareable seeds, a daily seed shortcut, recent-city history, and a local best score.
 
 The full story lives in [`docs/plan.md`](docs/plan.md). The implementation map is in [`docs/architecture.md`](docs/architecture.md).
 

@@ -80,6 +80,14 @@ _Avoid_: Game, round, session
 A short readable string that deterministically determines the city layout.
 _Avoid_: Code, map ID, level ID
 
+**Daily seed**:
+The seed derived from the local calendar date. It changes at midnight and remains shareable like any other seed.
+_Avoid_: Daily challenge, event seed
+
+**Recent city**:
+A seed the player has launched on this browser, kept for a quick replay.
+_Avoid_: History, bookmark
+
 **Attract mode**:
 The idle state behind the start screen. The city animates and the ball is hidden.
 _Avoid_: Menu, idle, splash

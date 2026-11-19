@@ -170,6 +170,8 @@ stateDiagram-v2
 - UI is a DOM layer over the canvas. HUD updates write strings only when values change.
 - Popups project world positions with the camera at spawn time. Callouts are centered and capped at three.
 - The URL seed is updated with `history.replaceState` on every run. `?seed=` is read on load.
+- **Daily run** starts a seed of the form `daily-YYYY-MM-DD` from the local calendar date. It is a normal shareable seed after launch.
+- Starting a run records the seed in a JSON array under `kaiju-pinball-recent-seeds`. The start screen shows up to five recent cities as launch chips.
 - Best score is read and written in `localStorage`. Storage failures are silent.
 
 ## Performance and limits
@@ -209,7 +211,7 @@ stateDiagram-v2
 
 - `npm run check`: strict TypeScript.
 - `npm run lint`: ESLint with zero warnings.
-- `npm test`: Vitest, covering deterministic seeding.
+- `npm test`: Vitest, covering deterministic seeding, daily seeds, and recent-seed history.
 - `npm run build`: production build.
 - Manual: use a visible browser tab. Background tabs pause `requestAnimationFrame` and make the game look frozen.
 - The dev server may choose a different port if 5173 is busy. Read the printed URL.
