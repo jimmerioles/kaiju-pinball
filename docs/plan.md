@@ -83,10 +83,10 @@ Someone opens the link, clicks launch, and says "one more run" without being tol
 
 ## Status
 
-The first playable version is built. It includes seeded city generation, the custom ball integrator, building destruction with shards and chain reactions, bumper caps, boost pads, inlane guides, flippers, a ball saver, combo scoring, synthesized audio, bloom and grain, start and end screens, shareable seeds, a local best score, and a responsive layout.
+The first playable version is built. It includes seeded city generation, the custom ball integrator, building destruction with shards and chain reactions, bumper caps, boost pads, inlane guides, flippers, a ball saver, combo scoring, synthesized audio, bloom and grain, start and end screens, shareable seeds, a daily seed shortcut, recent-city history, a local best score, and a responsive layout.
 
-Ideas left for a buffer pass: more city themes, a daily seed shortcut, richer mobile gestures, and a subtle ball trail.
+Ideas left for a buffer pass: more city themes, richer mobile gestures, and a subtle ball trail.
 
 ## Next step
 
-Continue with polish and the buffer week ideas, or stop here and share the city.
+Pick up one more city theme, a mobile gesture pass, or a subtle ball trail. Or stop here and share the city.

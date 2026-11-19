@@ -57,7 +57,8 @@ See `docs/architecture.md` for the full map.
 - `src/game/input.ts`: keyboard, pointer, and touch input.
 - `src/game/ui.ts`: DOM HUD, start and end screens, callouts, popups.
 - `src/game/config.ts`: table, ball, and game tuning. Start here for feel changes.
-- `src/game/rng.ts`: seed hashing and deterministic random generation.
+- `src/game/rng.ts`: seed hashing, daily seed, and deterministic random generation.
+- `src/game/seed-history.ts`: recent-city storage in `localStorage`.
 - `src/style.css`: HUD, title, overlays, responsive layout.
 
 Data flows one way: input to `Game.stepBall`, collisions in `City` and `FlipperPair`, feedback through `Effects`, `UI`, and `AudioEngine`. Rendering reads state. It does not own it.
@@ -87,7 +88,6 @@ Data flows one way: input to `Game.stepBall`, collisions in `City` and `FlipperP
 
 ## Next moves
 
-- Daily seed shortcut and seed history.
 - More city themes: harbor, rooftop garden, industrial.
 - A subtle ball trail and a stronger occlusion locator.
 - Mobile gesture pass and safe-area check on a real phone.

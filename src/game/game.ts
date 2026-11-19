@@ -15,7 +15,8 @@ import { Effects } from './effects';
 import { FlipperPair } from './flippers';
 import type { FlipperSide } from './input';
 import { Input } from './input';
-import { makeSeed } from './rng';
+import { dailySeed, makeSeed } from './rng';
+import { readRecentSeeds, rememberRecentSeed } from './seed-history';
 import { UI } from './ui';
 import type { CalloutTone } from './ui';
 
@@ -166,6 +167,8 @@ export class Game {
       onLaunch: () => this.handleLaunch(),
       onReplay: () => this.startRun(makeSeed(), true),
       onSameCity: () => this.startRun(this.seed, true),
+      onDaily: () => this.startRun(dailySeed(), true),
+      onRecentSeed: (seed) => this.startRun(seed, true),
       onMute: () => {
         this.audio.unlock();
         this.ui.setMuted(this.audio.toggleMuted());
@@ -184,6 +187,7 @@ export class Game {
 
     this.city.regenerate(this.seed);
     this.ui.setSeed(this.seed);
+    this.ui.setRecentSeeds(readRecentSeeds());
     this.ui.setScore(0);
     this.ui.setTimer(GAME.duration);
     this.ui.setBalls(GAME.balls);
@@ -588,6 +592,7 @@ export class Game {
     this.seed = seed;
     this.updateUrlSeed();
     this.ui.setSeed(seed);
+    this.ui.setRecentSeeds(rememberRecentSeed(seed));
 
     this.score = 0;
     this.combo = 0;
