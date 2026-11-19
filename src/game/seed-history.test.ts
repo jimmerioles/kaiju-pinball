@@ -51,6 +51,13 @@ describe('recent seed history', () => {
     expect(recent[0]).toBe(`quiet-row-${MAX_RECENT_SEEDS + 2}`);
   });
 
+  it('caps a stored history that is already too long', () => {
+    const seeds = Array.from({ length: MAX_RECENT_SEEDS + 3 }, (_, index) => `quiet-row-${index}`);
+    const storage = memoryStorage({ [RECENT_SEEDS_KEY]: JSON.stringify(seeds) });
+
+    expect(readRecentSeeds(storage)).toEqual(seeds.slice(0, MAX_RECENT_SEEDS));
+  });
+
   it('drops malformed entries and preserves valid seeds', () => {
     const storage = memoryStorage({
       [RECENT_SEEDS_KEY]: JSON.stringify(['alpha-row-10', 42, '', 'alpha-row-10', 'beta-row-20']),

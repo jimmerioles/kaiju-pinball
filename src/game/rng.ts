@@ -64,6 +64,12 @@ export function makeRng(seed: string): () => number {
   return mulberry32(hashString(seed));
 }
 
+export const MAX_SEED_LENGTH = 40;
+
+export function normalizeSeed(value: string): string {
+  return value.trim().slice(0, MAX_SEED_LENGTH);
+}
+
 export function makeSeed(): string {
   const adjective = ADJECTIVES[Math.floor(Math.random() * ADJECTIVES.length)];
   const noun = NOUNS[Math.floor(Math.random() * NOUNS.length)];
@@ -71,7 +77,9 @@ export function makeSeed(): string {
   return `${adjective}-${noun}-${number}`;
 }
 
-export function dailySeed(date = new Date()): string {
+export function dailySeed(
+  date: Pick<Date, 'getFullYear' | 'getMonth' | 'getDate'> = new Date(),
+): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');

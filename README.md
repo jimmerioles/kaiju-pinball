@@ -95,7 +95,8 @@ src/
     input.ts      keyboard, pointer, and touch controls
     ui.ts         HUD, start screen, end screen, callouts
     config.ts     table, ball, and game tuning
-    rng.ts        seed hashing and random generation
+    rng.ts        seed hashing, daily seed, and random generation
+    seed-history.ts recent-city storage and dedupe
 docs/
   adr/            architecture decision records
   screenshots/    README images
