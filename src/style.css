@@ -573,6 +573,8 @@ kbd {
 /* ---------- End screen ---------- */
 
 .end-screen {
+  align-items: safe center;
+  overflow-y: auto;
   background: radial-gradient(
     ellipse at 50% 38%,
     rgba(20, 15, 30, 0.5) 0%,
@@ -1083,6 +1085,65 @@ kbd {
 
   .start-foot {
     gap: 12px;
+  }
+
+  .end-inner {
+    padding-top: 12px;
+  }
+
+  .end-kicker {
+    margin-bottom: 6px;
+  }
+
+  .end-title {
+    font-size: clamp(1.7rem, 7.5vh, 2.4rem);
+  }
+
+  .end-score-label {
+    margin-top: 12px;
+  }
+
+  .end-score {
+    font-size: clamp(2.4rem, 12vh, 3.6rem);
+  }
+
+  .end-best {
+    margin-top: 5px;
+  }
+
+  .end-stats {
+    grid-template-columns: repeat(3, 1fr);
+    margin-top: 12px;
+  }
+
+  .end-stat {
+    padding: 7px 10px;
+    border-right: 1px solid var(--line);
+    border-bottom: none;
+  }
+
+  .end-stat:last-child {
+    border-right: none;
+  }
+
+  .end-seed-row {
+    margin-top: 12px;
+  }
+
+  .end-seed-row .ghost-button {
+    padding: 8px 16px;
+  }
+
+  .end-actions {
+    margin-top: 12px;
+  }
+
+  .end-actions .primary-button {
+    padding: 10px 26px;
+  }
+
+  .end-actions .ghost-button {
+    padding: 8px 16px;
   }
 }
 
