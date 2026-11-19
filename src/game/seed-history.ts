@@ -1,3 +1,5 @@
+import { normalizeSeed } from './rng';
+
 export const RECENT_SEEDS_KEY = 'kaiju-pinball-recent-seeds';
 export const MAX_RECENT_SEEDS = 5;
 
@@ -24,7 +26,7 @@ function parseRecentSeeds(raw: string | null): string[] {
     const seeds: string[] = [];
     for (const value of parsed) {
       if (typeof value !== 'string') continue;
-      const seed = value.trim().slice(0, 40);
+      const seed = normalizeSeed(value);
       if (!seed || seeds.includes(seed)) continue;
       seeds.push(seed);
       if (seeds.length >= MAX_RECENT_SEEDS) break;
@@ -49,7 +51,7 @@ export function rememberRecentSeed(
   seed: string,
   storage: SeedStorage | null = browserStorage(),
 ): string[] {
-  const value = seed.trim().slice(0, 40);
+  const value = normalizeSeed(seed);
   if (!value) return readRecentSeeds(storage);
 
   const next = [value, ...readRecentSeeds(storage).filter((item) => item !== value)].slice(

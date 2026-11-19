@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { dailySeed, hashString, makeSeed, mulberry32 } from './rng';
+import { dailySeed, hashString, MAX_SEED_LENGTH, makeSeed, mulberry32, normalizeSeed } from './rng';
 
 describe('seeded random generation', () => {
   it('replays the same sequence for the same seed', () => {
@@ -38,5 +38,20 @@ describe('seeded random generation', () => {
 
     expect(dailySeed(date)).toBe('daily-2026-01-05');
     expect(dailySeed(new Date(2026, 0, 6, 0, 1))).toBe('daily-2026-01-06');
+  });
+
+  it('reads local calendar fields instead of UTC fields', () => {
+    const localDate = {
+      getFullYear: () => 2026,
+      getMonth: () => 10,
+      getDate: () => 20,
+    };
+
+    expect(dailySeed(localDate)).toBe('daily-2026-11-20');
+  });
+
+  it('normalizes seed strings for URL and history use', () => {
+    expect(normalizeSeed('  peach-harbor-42  ')).toBe('peach-harbor-42');
+    expect(normalizeSeed('x'.repeat(MAX_SEED_LENGTH + 5))).toHaveLength(MAX_SEED_LENGTH);
   });
 });

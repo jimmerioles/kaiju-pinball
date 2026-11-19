@@ -165,7 +165,7 @@ stateDiagram-v2
 ## Input and UI
 
 - Input listens on `window` and ignores interactive targets such as buttons and screens.
-- Keyboard: A and D or the arrow keys steer. Z and M or the Shift keys fire flippers. Space launches.
+- Keyboard: A and D or the arrow keys steer. Z and M or the Shift keys fire flippers. Space launches unless a button or link has focus, so start and end screen actions activate natively.
 - Pointer: horizontal position steers with a dead zone. A click fires the flipper on that half. Touch drag steers and a tap fires.
 - UI is a DOM layer over the canvas. HUD updates write strings only when values change.
 - Popups project world positions with the camera at spawn time. Callouts are centered and capped at three.

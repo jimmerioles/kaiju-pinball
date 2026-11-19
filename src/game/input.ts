@@ -76,6 +76,8 @@ export class Input {
 
   private onKeyDown = (event: KeyboardEvent): void => {
     if (event.code === 'Space') {
+      // Let focused buttons activate natively so Daily run and recent chips launch their own seed.
+      if (this.isInteractiveTarget(event.target)) return;
       event.preventDefault();
       if (!event.repeat) this.callbacks.onLaunch();
       return;

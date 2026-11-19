@@ -15,7 +15,7 @@ import { Effects } from './effects';
 import { FlipperPair } from './flippers';
 import type { FlipperSide } from './input';
 import { Input } from './input';
-import { dailySeed, makeSeed } from './rng';
+import { dailySeed, makeSeed, normalizeSeed } from './rng';
 import { readRecentSeeds, rememberRecentSeed } from './seed-history';
 import { UI } from './ui';
 import type { CalloutTone } from './ui';
@@ -823,8 +823,8 @@ export class Game {
   private readSeed(): string {
     const value = new URL(window.location.href).searchParams.get('seed');
     if (!value) return makeSeed();
-    const trimmed = value.trim().slice(0, 40);
-    return trimmed.length > 0 ? trimmed : makeSeed();
+    const seed = normalizeSeed(value);
+    return seed.length > 0 ? seed : makeSeed();
   }
 
   private updateUrlSeed(): void {
