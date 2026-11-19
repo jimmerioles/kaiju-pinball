@@ -1,0 +1,52 @@
+{
+  "name": "kaiju-pinball",
+  "private": true,
+  "version": "0.1.0",
+  "description": "A tiny city, one very large ball, and ninety seconds of beautiful destruction.",
+  "type": "module",
+  "license": "MIT",
+  "author": "Jim Merioles",
+  "homepage": "https://jimmerioles.github.io/kaiju-pinball/",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jimmerioles/kaiju-pinball.git"
+  },
+  "keywords": [
+    "threejs",
+    "webgl",
+    "game",
+    "pinball",
+    "procedural-generation",
+    "typescript",
+    "vite"
+  ],
+  "engines": {
+    "node": ">=22.12"
+  },
+  "scripts": {
+    "dev": "vite --host 0.0.0.0",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --host 0.0.0.0",
+    "check": "tsc --noEmit",
+    "lint": "eslint . --max-warnings 0",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "verify": "npm run check && npm run lint && npm test && npm run format:check && npm run build"
+  },
+  "dependencies": {
+    "three": "^0.187.0"
+  },
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/three": "^0.187.0",
+    "eslint": "^10.15.0",
+    "globals": "^17.14.0",
+    "prettier": "^3.10.1",
+    "typescript": "~5.9.3",
+    "typescript-eslint": "^8.73.0",
+    "vite": "^7.3.8",
+    "vitest": "^5.1.1"
+  }
+}
