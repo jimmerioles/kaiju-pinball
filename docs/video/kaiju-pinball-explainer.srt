@@ -1,0 +1,448 @@
+1
+00:00:00,500 --> 00:00:02,979
+This is a city with a population of zero,
+
+2
+00:00:02,979 --> 00:00:05,277
+because every building in it is a box.
+
+3
+00:00:05,577 --> 00:00:08,427
+It has exactly one visitor: a chrome sphere,
+
+4
+00:00:08,427 --> 00:00:11,341
+about one point three units across, almost as
+
+5
+00:00:11,341 --> 00:00:13,284
+wide as the buildings it hits.
+
+6
+00:00:13,584 --> 00:00:16,378
+The rules are simple. Break the city, keep the
+
+7
+00:00:16,378 --> 00:00:18,808
+ball alive, and do it in ninety seconds.
+
+8
+00:00:21,708 --> 00:00:23,030
+This is Kaiju Pinball.
+
+9
+00:00:23,330 --> 00:00:25,794
+A pinball table where the obstacles are a
+
+10
+00:00:25,794 --> 00:00:28,499
+miniature city, and the ball is the disaster.
+
+11
+00:00:31,399 --> 00:00:34,183
+Start with the table. Pinball already has a
+
+12
+00:00:34,183 --> 00:00:37,031
+shape: a launch lane, a drain, two flippers,
+
+13
+00:00:37,031 --> 00:00:38,520
+and a few ways to lose.
+
+14
+00:00:38,820 --> 00:00:41,752
+A city has a shape too. A grid, nine columns
+
+15
+00:00:41,752 --> 00:00:44,616
+wide and thirteen rows deep, with two point
+
+16
+00:00:44,616 --> 00:00:46,615
+four five units between cells.
+
+17
+00:00:46,915 --> 00:00:49,343
+Each cell can hold a building, a bumper, or
+
+18
+00:00:49,343 --> 00:00:50,189
+nothing at all.
+
+19
+00:00:50,489 --> 00:00:53,223
+The launch lane and the three boost pads claim
+
+20
+00:00:53,223 --> 00:00:55,896
+their space first. The rest of the grid fills
+
+21
+00:00:55,896 --> 00:00:58,214
+in at a density of seventy-two percent.
+
+22
+00:00:58,514 --> 00:01:01,117
+So every run is a negotiation between two
+
+23
+00:01:01,117 --> 00:01:03,974
+maps: the one the ball needs, and the one the
+
+24
+00:01:03,974 --> 00:01:04,673
+city wants.
+
+25
+00:01:07,573 --> 00:01:09,801
+The buildings are not placed by hand. They
+
+26
+00:01:09,801 --> 00:01:10,810
+come from a string.
+
+27
+00:01:11,110 --> 00:01:13,755
+The seed is hashed with F N V one A, which
+
+28
+00:01:13,755 --> 00:01:16,462
+folds every character into a thirty-two bit
+
+29
+00:01:16,462 --> 00:01:16,966
+integer.
+
+30
+00:01:17,266 --> 00:01:19,995
+Then mulberry thirty-two turns that integer
+
+31
+00:01:19,995 --> 00:01:22,025
+into a stream of random numbers.
+
+32
+00:01:22,325 --> 00:01:24,776
+Each number makes a decision. Is there a
+
+33
+00:01:24,776 --> 00:01:27,412
+building here? How tall? Fragile, solid, or
+
+34
+00:01:27,412 --> 00:01:28,698
+bumper? Which pastel?
+
+35
+00:01:28,998 --> 00:01:31,793
+Random, but deterministic. The same seed
+
+36
+00:01:31,793 --> 00:01:33,889
+always produces the same city.
+
+37
+00:01:34,189 --> 00:01:37,161
+Which is why the city can live in the URL. The
+
+38
+00:01:37,161 --> 00:01:39,745
+seed is not a save file. It is the city,
+
+39
+00:01:39,745 --> 00:01:41,231
+compressed into a name.
+
+40
+00:01:41,531 --> 00:01:43,858
+Change one letter, and you get a different
+
+41
+00:01:43,858 --> 00:01:45,908
+skyline. Keep it, and you can share a
+
+42
+00:01:45,908 --> 00:01:46,406
+disaster.
+
+43
+00:01:49,306 --> 00:01:51,880
+Under the pastel paint, there is a very small
+
+44
+00:01:51,880 --> 00:01:52,737
+physics engine.
+
+45
+00:01:53,038 --> 00:01:55,877
+Every step, the ball takes on gravity, gets a
+
+46
+00:01:55,877 --> 00:01:58,590
+steering nudge, and moves. Position becomes
+
+47
+00:01:58,590 --> 00:02:01,304
+position plus velocity, times a fixed step.
+
+48
+00:02:01,604 --> 00:02:04,560
+The table pushes back. A bounce reflects the
+
+49
+00:02:04,560 --> 00:02:07,180
+normal component of velocity, scaled by
+
+50
+00:02:07,180 --> 00:02:07,986
+restitution.
+
+51
+00:02:08,286 --> 00:02:10,727
+For a sphere against a box, the test is
+
+52
+00:02:10,727 --> 00:02:13,605
+surprisingly simple. Find the closest point on
+
+53
+00:02:13,605 --> 00:02:16,484
+the box. If it is closer than the radius, push
+
+54
+00:02:16,484 --> 00:02:19,238
+the ball out along the normal, then reflect.
+
+55
+00:02:19,538 --> 00:02:22,539
+Solids and fragile buildings use a restitution
+
+56
+00:02:22,539 --> 00:02:25,279
+of zero point four eight. Bumpers use zero
+
+57
+00:02:25,279 --> 00:02:28,280
+point nine two. That difference is why bumpers
+
+58
+00:02:28,280 --> 00:02:28,998
+feel alive.
+
+59
+00:02:31,898 --> 00:02:34,383
+But there is a catch. A fast ball can pass
+
+60
+00:02:34,383 --> 00:02:36,986
+through a thin wall between two frames. This
+
+61
+00:02:36,986 --> 00:02:37,755
+is tunneling.
+
+62
+00:02:38,055 --> 00:02:40,927
+At the speed cap of forty, a sixty hertz step
+
+63
+00:02:40,927 --> 00:02:43,863
+moves the ball two thirds of a unit. A wall is
+
+64
+00:02:43,863 --> 00:02:46,353
+only zero point three five units thick.
+
+65
+00:02:46,653 --> 00:02:49,360
+So the game runs physics at one hundred and
+
+66
+00:02:49,360 --> 00:02:52,193
+twenty hertz. Now a step moves one third of a
+
+67
+00:02:52,193 --> 00:02:54,837
+unit, less than the wall. No tunneling, no
+
+68
+00:02:54,837 --> 00:02:56,474
+swept collision, no drama.
+
+69
+00:02:56,774 --> 00:02:59,526
+At most eight steps per frame, so a slow frame
+
+70
+00:02:59,526 --> 00:03:01,619
+cannot spiral into a physics storm.
+
+71
+00:03:04,519 --> 00:03:07,196
+Every collision has a cost. Damage is the
+
+72
+00:03:07,196 --> 00:03:10,199
+impact speed minus one, times zero point three
+
+73
+00:03:10,199 --> 00:03:13,137
+eight, with a floor of zero point three five.
+
+74
+00:03:13,437 --> 00:03:15,754
+Fragile buildings have one health. Solid
+
+75
+00:03:15,754 --> 00:03:18,245
+buildings have three. Bumpers have two, and
+
+76
+00:03:18,245 --> 00:03:19,983
+they give more than they take.
+
+77
+00:03:20,283 --> 00:03:22,930
+When a building breaks, it does not fall over.
+
+78
+00:03:22,930 --> 00:03:25,346
+It disappears, and a fixed pool of shards,
+
+79
+00:03:25,346 --> 00:03:27,762
+sparks, dust, and rings does the mourning.
+
+80
+00:03:28,062 --> 00:03:30,734
+But destruction is also a chain reaction. Up
+
+81
+00:03:30,734 --> 00:03:33,223
+to eight neighbors within three units are
+
+82
+00:03:33,223 --> 00:03:35,834
+queued for damage, forty to one hundred and
+
+83
+00:03:35,834 --> 00:03:37,352
+forty milliseconds later.
+
+84
+00:03:37,652 --> 00:03:40,052
+Chains can nest two levels deep, so one good
+
+85
+00:03:40,052 --> 00:03:41,961
+hit can take a whole block with it.
+
+86
+00:03:42,261 --> 00:03:44,976
+And every damaging hit feeds the combo. The
+
+87
+00:03:44,976 --> 00:03:47,881
+multiplier is one plus a quarter of the combo,
+
+88
+00:03:47,881 --> 00:03:48,954
+capped at twelve.
+
+89
+00:03:49,254 --> 00:03:51,890
+But the window is only two point six seconds.
+
+90
+00:03:51,890 --> 00:03:54,232
+The city rewards you for never stopping.
+
+91
+00:03:57,132 --> 00:03:59,732
+All of this has to fit inside a browser tab.
+
+92
+00:04:00,032 --> 00:04:02,984
+The city is drawn as one instanced mesh, not
+
+93
+00:04:02,984 --> 00:04:05,936
+ninety separate objects. Same geometry, same
+
+94
+00:04:05,936 --> 00:04:08,687
+materials, about three draw calls for the
+
+95
+00:04:08,687 --> 00:04:09,626
+whole skyline.
+
+96
+00:04:09,926 --> 00:04:12,505
+The windows are a texture, generated per seed
+
+97
+00:04:12,505 --> 00:04:14,625
+and swapped in when the city changes.
+
+98
+00:04:14,925 --> 00:04:17,811
+The effects are fixed pools. Four hundred and
+
+99
+00:04:17,811 --> 00:04:20,439
+twenty shards, nine hundred sparks, three
+
+100
+00:04:20,439 --> 00:04:23,261
+hundred and twenty dust motes, twenty rings.
+
+101
+00:04:23,261 --> 00:04:25,376
+Allocated once, recycled forever.
+
+102
+00:04:25,676 --> 00:04:28,483
+The ball gets its own environment map, a tiny
+
+103
+00:04:28,483 --> 00:04:31,165
+procedural panorama, so it reflects a world
+
+104
+00:04:31,165 --> 00:04:32,288
+that is not there.
+
+105
+00:04:32,588 --> 00:04:35,318
+And its locator halo ignores depth, so you can
+
+106
+00:04:35,318 --> 00:04:36,683
+find it behind a tower.
+
+107
+00:04:39,583 --> 00:04:42,285
+Kaiju Pinball is a seeded city, a fixed-step
+
+108
+00:04:42,285 --> 00:04:45,109
+simulation, and a scoreboard that wants you to
+
+109
+00:04:45,109 --> 00:04:45,845
+keep moving.
+
+110
+00:04:46,145 --> 00:04:49,150
+Same seed, same city. New seed, new disaster.
+
+111
+00:04:49,450 --> 00:04:52,093
+A tiny city. One very large ball. Ninety
+
+112
+00:04:52,093 --> 00:04:53,812
+seconds. And one more run.
+

@@ -12,6 +12,16 @@ A tiny city, one very large ball, and ninety seconds of beautiful destruction.
 
 Kaiju Pinball is a browser toy built with three.js. You steer a chrome ball through a seeded miniature city that doubles as a pinball table. Buildings crack and collapse into shards, glowing caps launch the ball across the table, and angled inlane guides funnel it back toward the flippers. Every hit inside a short window builds a multiplier. A local best score gives you a reason to come back.
 
+## Watch the explainer
+
+<video src="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120" controls playsinline poster="https://raw.githubusercontent.com/jimmerioles/kaiju-pinball/main/docs/screenshots/explainer.webp">
+  <a href="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120">Watch the five-minute explainer</a>
+</video>
+
+A five-minute visual explainer in the spirit of 3Blue1Brown: the table and the city as two maps, the seed, the collision math, the 120 Hz step, chains and combos, and the browser rendering budget. Narrated with Kokoro `af_heart`, animated with Manim, and built from the same constants as the game. [Full 1080p download](docs/video/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt).
+
+The explainer is documentation, not a runtime asset. The game itself still ships with no external models, textures, or audio.
+
 ## Run it
 
 ```bash
@@ -77,6 +87,7 @@ The full story lives in [`docs/plan.md`](docs/plan.md). The implementation map i
 - [`docs/architecture.md`](docs/architecture.md): runtime flow, simulation, rendering, and extension recipes.
 - [`GLOSSARY.md`](GLOSSARY.md): the shared vocabulary for the game.
 - [`docs/adr/`](docs/adr/): the decisions that are expensive to revisit.
+- [`docs/video/kaiju-pinball-explainer.mp4`](docs/video/kaiju-pinball-explainer.mp4): the five-minute explainer in 1080p.
 - [`AGENTS.md`](AGENTS.md): the entry point for a fresh coding agent.
 
 ## Project layout
@@ -100,6 +111,7 @@ src/
 docs/
   adr/            architecture decision records
   screenshots/    README images
+  video/          explainer video and captions
   plan.md         product plan
   architecture.md implementation reference
 ```
