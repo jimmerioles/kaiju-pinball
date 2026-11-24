@@ -14,7 +14,7 @@ Kaiju Pinball is a browser toy built with three.js. You steer a chrome ball thro
 
 ## Watch the explainer
 
-<video src="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120" controls playsinline poster="https://raw.githubusercontent.com/jimmerioles/kaiju-pinball/main/docs/screenshots/explainer.webp">
+<video src="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120" controls playsinline poster="https://github.com/user-attachments/assets/c5fc0738-ee35-43ed-9c21-5f1db1b8c4a7">
   <a href="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120">Watch the five-minute explainer</a>
 </video>
 
