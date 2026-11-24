@@ -14,8 +14,8 @@ Kaiju Pinball is a browser toy built with three.js. You steer a chrome ball thro
 
 ## Watch the explainer
 
-<video src="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120" controls playsinline poster="https://github.com/user-attachments/assets/c5fc0738-ee35-43ed-9c21-5f1db1b8c4a7">
-  <a href="https://github.com/user-attachments/assets/df40737f-a1aa-4c69-b51e-06a8242c2120">Watch the five-minute explainer</a>
+<video src="https://github.com/user-attachments/assets/72c53927-9915-48e3-ac0c-0332661c9fc5" controls playsinline>
+  <a href="https://github.com/user-attachments/assets/72c53927-9915-48e3-ac0c-0332661c9fc5">Watch the five-minute explainer</a>
 </video>
 
 A five-minute visual explainer in the spirit of 3Blue1Brown: the table and the city as two maps, the seed, the collision math, the 120 Hz step, chains and combos, and the browser rendering budget. Narrated with Kokoro `af_heart`, animated with Manim, and built from the same constants as the game. [Full 1080p download](docs/video/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt).
