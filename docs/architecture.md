@@ -211,7 +211,7 @@ stateDiagram-v2
 
 - `npm run check`: strict TypeScript.
 - `npm run lint`: ESLint with zero warnings.
-- `npm test`: Vitest, covering deterministic seeding, daily seeds, and recent-seed history.
+- `npm test`: Vitest, covering deterministic seeding, the seed-to-city layout contract, sphere and guide collision math, table config invariants, daily seeds, and recent-seed history.
 - `npm run build`: production build.
 - Manual: use a visible browser tab. Background tabs pause `requestAnimationFrame` and make the game look frozen.
 - The dev server may choose a different port if 5173 is busy. Read the printed URL.

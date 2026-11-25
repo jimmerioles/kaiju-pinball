@@ -50,7 +50,7 @@ The implementation map is in [docs/architecture.md](docs/architecture.md). More 
 
 ## Tests
 
-`npm test` covers deterministic seeding, daily seeds, and recent-city history. `npm run verify` runs typecheck, lint, tests, format check, and build.
+`npm test` covers deterministic seeding, the generated city layout for known seeds, sphere and segment collision math, and recent-city history. `npm run verify` runs typecheck, lint, tests, format check, and build.
 
 ## Credits
 

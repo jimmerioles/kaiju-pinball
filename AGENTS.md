@@ -50,6 +50,7 @@ See `docs/architecture.md` for the full map.
 
 - `src/game/game.ts`: orchestration, state machine, fixed-step ball physics, scoring, camera, game over.
 - `src/game/city.ts`: table, seeded city, pads, guides, lamps, roof details, facades.
+- `src/game/collision.ts`: sphere versus AABB and ball versus guide segment collision math.
 - `src/game/ball.ts`: chrome ball, custom environment, contact shadow, locator halo.
 - `src/game/flippers.ts`: flipper geometry, animation, capsule collision.
 - `src/game/effects.ts`: instanced shards, shader particles, shockwave rings.
