@@ -2,128 +2,54 @@
 
 A tiny city, one very large ball, and ninety seconds of beautiful destruction.
 
-[Play the live demo](https://jimmerioles.github.io/kaiju-pinball/) · [Architecture](docs/architecture.md) · [Agent handoff](AGENTS.md)
+[Play the live demo](https://jimmerioles.github.io/kaiju-pinball/)
 
-[![CI](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/ci.yml/badge.svg)](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/ci.yml)
-[![Deploy](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/pages.yml/badge.svg)](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/pages.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-ffc857.svg)](LICENSE)
+https://github.com/user-attachments/assets/69ba2d5e-c2cc-44e7-9e4d-255021bc5098
 
-![Kaiju Pinball title screen](docs/screenshots/title.webp)
+A five-minute technical explainer. [1080p download](https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt) · [Production notes](docs/explainer/README.md)
 
-Kaiju Pinball is a browser toy built with three.js. You steer a chrome ball through a seeded miniature city that doubles as a pinball table. Buildings crack and collapse into shards, glowing caps launch the ball across the table, and angled inlane guides funnel it back toward the flippers. Every hit inside a short window builds a multiplier. A local best score gives you a reason to come back.
+Kaiju Pinball is a browser toy built with three.js for players who want a quick arcade run and developers who like procedural systems. You steer a chrome ball through a seeded miniature city that doubles as a pinball table: buildings are bumpers, streets are lanes, and the flippers sit at the edge of the plinth. Runs last ninety seconds, every seed builds a different city, and the whole thing ships without external models, textures, or audio.
 
-## Watch the explainer
+## Key features
 
-<video src="https://github.com/user-attachments/assets/72c53927-9915-48e3-ac0c-0332661c9fc5" controls playsinline>
-  <a href="https://github.com/user-attachments/assets/72c53927-9915-48e3-ac0c-0332661c9fc5">Watch the five-minute explainer</a>
-</video>
-
-A five-minute visual explainer in the spirit of 3Blue1Brown: the table and the city as two maps, the seed, the collision math, the 120 Hz step, chains and combos, and the browser rendering budget. Narrated with Kokoro `af_heart`, animated with Manim, and built from the same constants as the game. [Full 1080p download](docs/video/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt).
-
-The explainer is documentation, not a runtime asset. The game itself still ships with no external models, textures, or audio.
+- **The city is the table.** Fragile blocks chain into their neighbors, bumper caps launch the ball, and the flippers sit at the plinth edge.
+- **Seed the skyline.** A short string deterministically builds the layout, palette, and window patterns. Share it with `?seed=`.
+- **Arcade physics, not a rigid-body engine.** A custom 120 Hz solver handles the ball, flippers, guides, boost pads, and bumper caps.
+- **Destruction with feedback.** Shards, sparks, dust, shockwave rings, screen shake, and a combo multiplier turn each hit into feedback.
+- **Ninety seconds, three balls.** A five-second ball saver protects the first drain after each launch. The end screen ranks the wreckage and keeps a local best.
+- **Daily run and recent cities.** The start screen seeds a city from today's date and keeps the last five cities you launched.
+- **No external assets.** Every mesh, facade, texture, and sound is generated in code. The build is Vite, TypeScript, and three.js.
+- **Desktop and touch.** Pointer, keyboard, and touch controls over a responsive DOM HUD and a single WebGL canvas.
 
 ## Run it
 
 ```bash
 npm ci
-npm run dev
+npm run dev      # local server, usually http://localhost:5173
+npm run build    # production bundle
+npm test         # Vitest
+npm run preview  # serve the production build
 ```
 
-Node 22.12 or newer. `.nvmrc` pins Node 24. Open the local URL Vite prints, usually `http://localhost:5173`.
+Node 22.12 or newer; `.nvmrc` pins Node 24. Pushes to `main` deploy the static build to GitHub Pages.
 
-```bash
-npm run build
-npm run preview
-```
+## Use it
 
-## Controls
+- Move the pointer or press **A** / **D** or the arrow keys to steer.
+- Click the left or right half of the table, or press **Z** / **M** or the Shift keys, to fire that flipper.
+- Press **Space** to launch. A run is ninety seconds with three balls; the first drain in the first five seconds after launch gets a save.
+- Add `?seed=peach-harbor-42` to the URL to replay a city, or use **Copy city link** after a run. The start screen also offers a **Daily run** and the five most recent cities on this browser.
 
-- **Move the pointer** or press **A** / **D** to steer.
-- **Click** the left or right half of the screen to fire that flipper. **Z** and **M** also work, as do the Shift keys.
-- **Space** launches the ball from the start screen.
-- The game runs for ninety seconds with three balls.
-- A five second ball saver protects the first drain of each ball.
+## How it works
 
-## Seeds
+A seeded generator lays out a 9 by 13 grid for the city, then a custom arcade solver runs the ball, flippers, guides, and pads at 120 Hz. Buildings are instanced, effects are pooled, and every mesh, facade, and sound is generated at runtime. The physics is tuned for arcade feel, not rigid-body realism; chain reactions are scheduled, and the best score and recent cities stay in `localStorage`.
 
-The city is generated from a seed. The current seed appears in the HUD and on the end screen. Add `?seed=peach-harbor-42` to the URL to revisit a city, or use **Copy city link** after a run.
+The implementation map is in [docs/architecture.md](docs/architecture.md). More detail: [product plan](docs/plan.md) · [glossary](GLOSSARY.md) · [ADRs](docs/adr/) · [agent handoff](AGENTS.md).
 
-**Daily run** on the start screen loads a city seeded from today's local date. It changes at midnight and shares like any other seed.
+## Tests
 
-The start screen also keeps the five most recent cities launched on this browser. Pick one to play it again.
+`npm test` covers deterministic seeding, daily seeds, and recent-city history. `npm run verify` runs typecheck, lint, tests, format check, and build.
 
-## Screens
+## Credits
 
-| Gameplay                                    | End of a run                                    |
-| ------------------------------------------- | ----------------------------------------------- |
-| ![Gameplay](docs/screenshots/gameplay.webp) | ![End screen](docs/screenshots/end-screen.webp) |
-
-## Development
-
-```bash
-npm run check   # strict TypeScript
-npm run lint    # ESLint, zero warnings
-npm test        # Vitest
-npm run build   # production bundle
-npm run format  # Prettier
-```
-
-`npm run verify` runs lint, tests, formatting check, and build in one pass.
-
-## How it is built
-
-- Vite, TypeScript, and three.js with no external models, textures, or audio files.
-- Seeded city generation with one `InstancedMesh` for buildings and one for bumper caps.
-- A small custom ball integrator with fixed 120 Hz substeps and sphere versus AABB collisions.
-- Instanced shards, shader particle pools for sparks and dust, additive shockwave rings, and synthesized Web Audio impacts.
-- `EffectComposer` with bloom, a vignette, and film grain.
-- A DOM HUD over a single WebGL canvas, with shareable seeds, a daily seed shortcut, recent-city history, and a local best score.
-
-The full story lives in [`docs/plan.md`](docs/plan.md). The implementation map is in [`docs/architecture.md`](docs/architecture.md).
-
-## Docs
-
-- [`docs/plan.md`](docs/plan.md): the product idea, build plan, and status.
-- [`docs/architecture.md`](docs/architecture.md): runtime flow, simulation, rendering, and extension recipes.
-- [`GLOSSARY.md`](GLOSSARY.md): the shared vocabulary for the game.
-- [`docs/adr/`](docs/adr/): the decisions that are expensive to revisit.
-- [`docs/video/kaiju-pinball-explainer.mp4`](docs/video/kaiju-pinball-explainer.mp4): the five-minute explainer in 1080p.
-- [`AGENTS.md`](AGENTS.md): the entry point for a fresh coding agent.
-
-## Project layout
-
-```
-src/
-  main.ts
-  style.css
-  game/
-    game.ts       orchestration, physics, scoring, camera
-    city.ts       table, seeded city, boost pads, guides, lamps, roof details
-    ball.ts       chrome ball, custom environment, contact shadow
-    flippers.ts   flipper geometry and collisions
-    effects.ts    shards, particles, shockwave rings
-    audio.ts      synthesized sound effects and ambience
-    input.ts      keyboard, pointer, and touch controls
-    ui.ts         HUD, start screen, end screen, callouts
-    config.ts     table, ball, and game tuning
-    rng.ts        seed hashing, daily seed, and random generation
-    seed-history.ts recent-city storage and dedupe
-docs/
-  adr/            architecture decision records
-  screenshots/    README images
-  video/          explainer video and captions
-  plan.md         product plan
-  architecture.md implementation reference
-```
-
-## Deployment
-
-Pushes to `main` deploy the static build to GitHub Pages through `.github/workflows/pages.yml`. The build uses a relative base, so it also works on Netlify, Cloudflare Pages, or any static host.
-
-## Notes
-
-The project favours arcade feel over rigid body realism. Buildings fracture into a handful of chunky shards, chain reactions are scheduled rather than simulated, and the ball uses a hand tuned integrator so it stays fast and predictable.
-
-## License
-
-MIT. See [`LICENSE`](LICENSE).
+Created by [Jim Merioles](https://github.com/jimmerioles). Built with [three.js](https://threejs.org/), [Vite](https://vite.dev/), and [TypeScript](https://www.typescriptlang.org/). MIT licensed, see [LICENSE](LICENSE).

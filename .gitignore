@@ -3,3 +3,6 @@ dist
 dist-ssr
 *.local
 .DS_Store
+
+# Explainer master lives as a release asset, not in git.
+/docs/video/*.mp4
