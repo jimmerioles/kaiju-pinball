@@ -8,7 +8,7 @@ https://github.com/user-attachments/assets/69ba2d5e-c2cc-44e7-9e4d-255021bc5098
 
 A five-minute technical explainer. [1080p download](https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt) · [Production notes](docs/explainer/README.md)
 
-Kaiju Pinball is a browser toy built with three.js for players who want a quick arcade run and developers who like procedural systems. You steer a chrome ball through a seeded miniature city that doubles as a pinball table: buildings are bumpers, streets are lanes, and the flippers sit at the edge of the plinth. Runs last ninety seconds, every seed builds a different city, and the whole thing ships without external models, textures, or audio.
+Kaiju Pinball is a browser toy built with three.js for players who want a quick arcade run and developers who like procedural systems. You steer a chrome ball through a seeded miniature city that doubles as a pinball table: buildings are bumpers, streets are lanes, and the flippers sit at the edge of the plinth. Runs last ninety seconds, every seed builds a different city, and the game ships without external models, textures, or audio.
 
 ## Key features
 
@@ -42,7 +42,7 @@ Node 22.12 or newer; `.nvmrc` pins Node 24. Pushes to `main` deploy the static b
 
 ## How it works
 
-A seeded generator lays out a 9 by 13 grid for the city, then a custom arcade solver runs the ball, flippers, guides, and pads at 120 Hz. Buildings are instanced, effects are pooled, and every mesh, facade, and sound is generated at runtime. The physics is tuned for arcade feel, not rigid-body realism; chain reactions are scheduled, and the best score and recent cities stay in `localStorage`.
+A seeded generator lays out the city on a 9 by 13 grid, then a custom arcade solver runs the ball, flippers, guides, and pads at 120 Hz. Buildings are instanced, effects are pooled, and every mesh, facade, and sound is generated at runtime. The physics is tuned for arcade feel, not rigid-body realism; chain reactions are scheduled, and the best score and recent cities stay in `localStorage`.
 
 The implementation map is in [docs/architecture.md](docs/architecture.md). More detail: [product plan](docs/plan.md) · [glossary](GLOSSARY.md) · [ADRs](docs/adr/) · [agent handoff](AGENTS.md).
 
