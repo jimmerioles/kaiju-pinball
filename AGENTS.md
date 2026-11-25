@@ -60,6 +60,7 @@ See `docs/architecture.md` for the full map.
 - `src/game/rng.ts`: seed hashing, daily seed, and deterministic random generation.
 - `src/game/seed-history.ts`: recent-city storage in `localStorage`.
 - `src/style.css`: HUD, title, overlays, responsive layout.
+- `case-study.html` and `src/case-study.css`: a standalone case study page. It is a second Vite entry and does not load three.js.
 
 Data flows one way: input to `Game.stepBall`, collisions in `City` and `FlipperPair`, feedback through `Effects`, `UI`, and `AudioEngine`. Rendering reads state. It does not own it.
 

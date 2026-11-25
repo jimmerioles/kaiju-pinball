@@ -4,6 +4,8 @@ A tiny city, one very large ball, and ninety seconds of beautiful destruction.
 
 [Play the live demo](https://jimmerioles.github.io/kaiju-pinball/)
 
+Read the [case study](https://jimmerioles.github.io/kaiju-pinball/case-study.html): how the table, the city, and the 120 Hz solver fit together.
+
 https://github.com/user-attachments/assets/69ba2d5e-c2cc-44e7-9e4d-255021bc5098
 
 A five-minute technical explainer. [1080p download](https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt) · [Production notes](docs/explainer/README.md)

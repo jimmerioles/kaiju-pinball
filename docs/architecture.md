@@ -222,3 +222,11 @@ stateDiagram-v2
 - GitHub Actions runs CI on push and pull request, and deploys Pages on push to main.
 - Pages URL: `https://jimmerioles.github.io/kaiju-pinball/`.
 - There is no server, database, or environment variable. Seeds live in the URL.
+
+## Case study
+
+- `case-study.html` is a second static page in the same Vite build. It does not load three.js.
+- `index.html` redirects `#/case-study` to the page so the Throughline-style deep link still works.
+- `src/case-study.css` owns the page. It shares the game palette and Bricolage Grotesque.
+- `vite.config.ts` lists both HTML entries under `build.rollupOptions.input`.
+- Screenshots come from `docs/screenshots/`. The explainer is a release asset, not a repository file.

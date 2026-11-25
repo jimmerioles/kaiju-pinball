@@ -22,6 +22,12 @@
     <meta property="og:image" content="https://jimmerioles.github.io/kaiju-pinball/og-image.jpg" />
     <meta name="twitter:card" content="summary_large_image" />
     <title>Kaiju Pinball</title>
+    <!-- Keep the Throughline-style deep link working. -->
+    <script>
+      if (window.location.hash.replace(/\/+$/, '') === '#/case-study') {
+        window.location.replace('./case-study.html');
+      }
+    </script>
   </head>
   <body>
     <div id="app" aria-hidden="true"></div>
@@ -100,6 +106,20 @@
     <div id="popups" class="popups" aria-hidden="true"></div>
 
     <section id="start-screen" class="screen start-screen">
+      <a
+        class="case-study-link"
+        href="./case-study.html"
+        aria-label="Read the Kaiju Pinball case study"
+      >
+        <svg viewBox="0 0 16 16" class="icon" aria-hidden="true">
+          <path d="M4 2.5h5l3 3v8H4z" />
+          <path d="M9 2.5v3h3M6 8h4M6 10.5h4" />
+        </svg>
+        <span>Case study</span>
+        <svg viewBox="0 0 16 16" class="icon case-study-link__arrow" aria-hidden="true">
+          <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+        </svg>
+      </a>
       <div class="start-inner">
         <div class="start-head">
           <div class="start-kicker">

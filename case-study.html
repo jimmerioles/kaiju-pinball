@@ -1,0 +1,1071 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b1626" />
+    <meta name="color-scheme" content="dark" />
+    <meta name="author" content="Jim Merioles" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <meta
+      name="description"
+      content="Kaiju Pinball case study: how a chrome ball, a seeded miniature city, and a custom 120 Hz solver become a ninety-second pinball run with no external models, textures, or audio."
+    />
+    <meta property="og:title" content="Kaiju Pinball case study · A city built to be broken" />
+    <meta
+      property="og:description"
+      content="A chrome ball, a seeded miniature city, and a custom 120 Hz solver. How Kaiju Pinball turns a three.js demo into a ninety-second game."
+    />
+    <meta property="og:type" content="article" />
+    <meta property="og:site_name" content="Kaiju Pinball" />
+    <meta property="og:url" content="https://jimmerioles.github.io/kaiju-pinball/case-study.html" />
+    <meta property="og:image" content="https://jimmerioles.github.io/kaiju-pinball/og-image.jpg" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="canonical" href="https://jimmerioles.github.io/kaiju-pinball/case-study.html" />
+    <title>Kaiju Pinball case study · A city built to be broken</title>
+    <link rel="stylesheet" href="/src/case-study.css" />
+  </head>
+  <body>
+    <a class="cs-skip" href="#case-study-main">Skip to the case study</a>
+
+    <div class="cs-page">
+      <header class="cs-topbar" aria-label="Case study">
+        <a class="cs-brand" href="./" aria-label="Kaiju Pinball home">
+          <span class="cs-brand-ball" aria-hidden="true"></span>
+          <span class="cs-brand-name">Kaiju Pinball</span>
+          <span class="cs-brand-divider" aria-hidden="true"></span>
+          <span class="cs-brand-section">Case study</span>
+        </a>
+        <a class="cs-back" href="./" aria-label="Back to the table">
+          <svg viewBox="0 0 16 16" class="cs-icon" aria-hidden="true">
+            <path d="M10.5 3.5 6 8l4.5 4.5" />
+          </svg>
+          <span>Back to the table</span>
+        </a>
+      </header>
+
+      <main id="case-study-main" class="cs-main" tabindex="-1">
+        <article>
+          <header class="cs-hero">
+            <div class="cs-shell">
+              <p class="cs-kicker">
+                <span class="cs-kicker-dot" aria-hidden="true"></span>
+                three.js · Case study
+              </p>
+              <h1 class="cs-hero-title">
+                A city built<br />
+                <span class="cs-hero-outline">to be broken.</span>
+              </h1>
+              <p class="cs-hero-lede">
+                Kaiju Pinball is a browser toy where a chrome ball tears through a seeded miniature
+                city that doubles as a pinball table. Ninety seconds, three balls, no external
+                models, textures, or audio, and a custom solver at 120 Hz. The hard part was not
+                making destruction look real. It was making it read instantly and cost almost
+                nothing.
+              </p>
+
+              <div class="cs-hero-bottom">
+                <div class="cs-actions">
+                  <a class="cs-button cs-button--primary" href="./">
+                    <span>Play the game</span>
+                    <svg viewBox="0 0 16 16" class="cs-icon" aria-hidden="true">
+                      <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+                    </svg>
+                  </a>
+                  <a class="cs-button cs-button--ghost" href="#how-title">
+                    <span>Read the build</span>
+                    <svg viewBox="0 0 16 16" class="cs-icon" aria-hidden="true">
+                      <path d="M8 3v9M4.5 8.5 8 12l3.5-3.5" />
+                    </svg>
+                  </a>
+                </div>
+
+                <dl class="cs-facts">
+                  <div>
+                    <dt>Role</dt>
+                    <dd>Design, code, audio</dd>
+                  </div>
+                  <div>
+                    <dt>Stack</dt>
+                    <dd>Vite, TypeScript, three.js</dd>
+                  </div>
+                  <div>
+                    <dt>Format</dt>
+                    <dd>90 seconds, 3 balls</dd>
+                  </div>
+                  <div>
+                    <dt>Status</dt>
+                    <dd>v0.1, November 2026</dd>
+                  </div>
+                </dl>
+              </div>
+
+              <figure class="cs-figure cs-figure--hero">
+                <div class="cs-frame">
+                  <div class="cs-frame-meta">
+                    <span>City: little-basin-10</span>
+                    <span>Playfield · 1600 x 914</span>
+                  </div>
+                  <img
+                    src="./docs/screenshots/gameplay.webp"
+                    alt="The Kaiju Pinball table from above at the start of a run, with a pastel miniature city, glow-tipped flippers, and the score HUD at zero."
+                    width="1600"
+                    height="914"
+                  />
+                </div>
+                <figcaption>
+                  The table at 1600 x 914. The skyline is one instanced mesh. The HUD above it is
+                  real DOM.
+                </figcaption>
+              </figure>
+            </div>
+          </header>
+
+          <div class="cs-shell cs-sections">
+            <section class="cs-section" aria-labelledby="problem-title">
+              <div class="cs-aside">
+                <span class="cs-number">01</span>
+                <p class="cs-kicker">The problem</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="problem-title">A physics demo is not yet a game.</h2>
+                <p class="cs-lede">
+                  Most browser 3D demos stop at the scene. You orbit a model, click a button, and
+                  the technical achievement is the whole experience. Kaiju Pinball starts from the
+                  opposite end: a loop that should survive a stranger's first thirty seconds.
+                </p>
+                <p>
+                  Pinball supplies the shape. A launch lane, a drain, two flippers, three balls,
+                  ninety seconds. The city supplies the targets and the theme. Put them together and
+                  the table stops being a backdrop. Buildings are bumpers, streets are lanes, and
+                  every block is both scenery and score.
+                </p>
+                <p>
+                  The constraint was readability. If a player cannot tell what will break, what will
+                  fight back, and what just happened, the chaos is noise. The build keeps one ball,
+                  three block types, a four-color accent set, and a small set of feedback layers.
+                  Everything else is either generated or cut.
+                </p>
+
+                <div class="cs-compare">
+                  <h3>From tech demo to table</h3>
+                  <p class="cs-compare-intro">
+                    The difference is not more effects. It is a loop that gives every effect a job.
+                  </p>
+                  <table>
+                    <caption class="sr-only">
+                      A comparison of a typical 3D demo and Kaiju Pinball across goal, targets,
+                      feedback, failure, and replay
+                    </caption>
+                    <thead>
+                      <tr>
+                        <th scope="col">Criterion</th>
+                        <th scope="col">A 3D demo</th>
+                        <th scope="col">Kaiju Pinball</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      <tr>
+                        <th scope="row">Goal</th>
+                        <td data-label="A 3D demo">Orbit the scene and try the one interaction.</td>
+                        <td data-label="Kaiju Pinball">
+                          Keep a ball alive for ninety seconds and beat a score.
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Targets</th>
+                        <td data-label="A 3D demo">Whatever the model happens to contain.</td>
+                        <td data-label="Kaiju Pinball">
+                          A seeded city where every block has health and a role.
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Feedback</th>
+                        <td data-label="A 3D demo">One effect when you click.</td>
+                        <td data-label="Kaiju Pinball">
+                          Shards, sparks, dust, rings, shake, sound, and a score popup.
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Failure</th>
+                        <td data-label="A 3D demo">Nothing to lose.</td>
+                        <td data-label="Kaiju Pinball">
+                          The drain costs a ball, and the report gives the run a rank.
+                        </td>
+                      </tr>
+                      <tr>
+                        <th scope="row">Replay</th>
+                        <td data-label="A 3D demo">A different camera angle.</td>
+                        <td data-label="Kaiju Pinball">
+                          A new seed, a better combo, one more run.
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="what-title">
+              <div class="cs-aside">
+                <span class="cs-number">02</span>
+                <p class="cs-kicker">What it is</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="what-title">A pinball table wearing a city.</h2>
+                <p class="cs-lede">
+                  The playfield is 23.6 units wide and 34 units deep. The city sits on that surface
+                  in a 9 by 13 grid, with the launch lane at the top and three boost pads cut into
+                  the streets. The ball is 1.32 units across, about one building wide.
+                </p>
+                <p>
+                  A run starts with a seed. The same seed builds the same city, down to the palette,
+                  the window pattern, and the roof details. Type a new seed and the skyline changes.
+                  Share the URL and a friend gets the same table. The daily run is just a seed made
+                  from the local calendar date.
+                </p>
+                <p>
+                  Three block types do the teaching. Fragile blocks break in one hit and feed
+                  chains. Solid blocks take three hits and slow the route down. Bumper blocks take
+                  two hits and throw the ball back with a shockwave. The flippers sit at the plinth
+                  edge, with inlane guides on both sides and a five-second save on each fresh ball.
+                </p>
+
+                <dl class="cs-specs">
+                  <div>
+                    <dt>Table</dt>
+                    <dd>23.6 wide, 34 deep</dd>
+                  </div>
+                  <div>
+                    <dt>City</dt>
+                    <dd>9 x 13 grid at 2.45 spacing</dd>
+                  </div>
+                  <div>
+                    <dt>Run</dt>
+                    <dd>90 seconds, 3 balls</dd>
+                  </div>
+                  <div>
+                    <dt>Save</dt>
+                    <dd>5-second save window</dd>
+                  </div>
+                </dl>
+
+                <div class="cs-statement">
+                  <p>One ball, one city, one more run.</p>
+                </div>
+
+                <p>
+                  The loop is deliberately small. There is no inventory, no campaign, and no upgrade
+                  tree. A run ends with a score, a rank, a seed, and two buttons. The interesting
+                  part is what happens between the launch and the drain.
+                </p>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="run-title">
+              <div class="cs-aside">
+                <span class="cs-number">03</span>
+                <p class="cs-kicker">The run</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="run-title">The loop in six beats.</h2>
+                <p class="cs-lede">
+                  A representative run, from the first screen to the report. The times are
+                  approximate because the ball decides, but the order is the design.
+                </p>
+
+                <ol class="cs-beats" aria-label="Six beats in a representative run">
+                  <li>
+                    <p class="cs-beat-time">0:00</p>
+                    <div>
+                      <h3>The city is the first thing you see.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            The start screen sits directly over the attract city, with the title,
+                            launch, daily run, current seed, and up to five recent cities.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            The table is visible before the first click. The first decision is
+                            already about a specific city.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                  <li>
+                    <p class="cs-beat-time">0:03</p>
+                    <div>
+                      <h3>The ball enters from the top.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            A chrome ball drops into the launch lane and gravity pulls it toward the
+                            city. The camera eases to follow.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            No tutorial. The lane gives the player a beat to read the table before
+                            the ball reaches the first block.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                  <li>
+                    <p class="cs-beat-time">0:10</p>
+                    <div>
+                      <h3>The first hit teaches the rules.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            Fragile blocks break in one hit, solid blocks take three, and bumper
+                            caps throw the ball back with a shockwave.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            The materials do the teaching. Pastel means breakable. Muted means
+                            stubborn. Glowing means it hits back.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                  <li>
+                    <p class="cs-beat-time">0:25</p>
+                    <div>
+                      <h3>The combo wants motion.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            Each damaging hit raises the multiplier by 0.25 and resets the
+                            2.6-second window. Chain reactions add points and a callout.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            The scoreboard turns destruction into a route. Standing still is the
+                            only wrong move.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                  <li>
+                    <p class="cs-beat-time">1:10</p>
+                    <div>
+                      <h3>The save buys one mistake.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            The first drain in the first five seconds of a ball shows "Ball saved".
+                            Later drains cost a ball and relaunch after about a second.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            The save protects the opening, when the player is still reading the
+                            table. It does not protect the whole run.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                  <li>
+                    <p class="cs-beat-time">1:30</p>
+                    <div>
+                      <h3>The wreckage gets a report.</h3>
+                      <dl>
+                        <div>
+                          <dt>On screen</dt>
+                          <dd>
+                            Time slows, the camera orbits the city, and the end screen shows score,
+                            buildings destroyed, best combo, rank, seed, replay, and same city.
+                          </dd>
+                        </div>
+                        <div>
+                          <dt>Why it lands</dt>
+                          <dd>
+                            The run ends with a number and a name, then two ways to start again. The
+                            seed is the bridge between runs.
+                          </dd>
+                        </div>
+                      </dl>
+                    </div>
+                  </li>
+                </ol>
+
+                <div class="cs-duo">
+                  <figure class="cs-figure">
+                    <div class="cs-frame">
+                      <img
+                        src="./docs/screenshots/title.webp"
+                        alt="The Kaiju Pinball start screen, with the solid and outlined title over the miniature city, a launch button, a daily run button, and recent city chips."
+                        width="1600"
+                        height="914"
+                      />
+                    </div>
+                    <figcaption>
+                      The start screen shows the city before it asks for a click. The current seed
+                      and recent cities sit under the first action.
+                    </figcaption>
+                  </figure>
+                  <figure class="cs-figure">
+                    <div class="cs-frame">
+                      <img
+                        src="./docs/screenshots/end-screen.webp"
+                        alt="The Kaiju Pinball end screen over a blurred city, showing a score of 18,750, seven buildings destroyed, best combo x1.3, and the rank Property developer."
+                        width="1600"
+                        height="914"
+                      />
+                    </div>
+                    <figcaption>
+                      The end report. Score, buildings, best combo, rank, seed, and two ways to
+                      start again.
+                    </figcaption>
+                  </figure>
+                </div>
+
+                <aside class="cs-explainer" aria-labelledby="explainer-title">
+                  <a
+                    class="cs-explainer-poster"
+                    href="https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4"
+                    aria-label="Watch the five-minute Kaiju Pinball explainer at 1080p"
+                  >
+                    <img
+                      src="./docs/screenshots/explainer.webp"
+                      alt="Title card for the five-minute Kaiju Pinball technical explainer, showing the game title over the city and the line How a city becomes a pinball table."
+                      width="1280"
+                      height="720"
+                    />
+                    <span class="cs-play" aria-hidden="true"></span>
+                  </a>
+                  <div class="cs-explainer-copy">
+                    <p class="cs-kicker">The five-minute explainer</p>
+                    <h3 id="explainer-title">How a city becomes a pinball table.</h3>
+                    <p>
+                      The film walks through the seed, the collision math, the 120 Hz step, chains,
+                      combos, and the rendering budget. Narration by Kokoro. Animation by Manim,
+                      using constants from the game.
+                    </p>
+                    <div class="cs-explainer-links">
+                      <a
+                        class="cs-text-link"
+                        href="https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4"
+                      >
+                        Watch at 1080p
+                        <svg viewBox="0 0 16 16" class="cs-icon" aria-hidden="true">
+                          <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+                        </svg>
+                      </a>
+                      <a
+                        class="cs-text-link"
+                        href="https://github.com/jimmerioles/kaiju-pinball/blob/main/docs/video/kaiju-pinball-explainer.srt"
+                      >
+                        Read the captions
+                      </a>
+                      <a
+                        class="cs-text-link"
+                        href="https://github.com/jimmerioles/kaiju-pinball/blob/main/docs/explainer/README.md"
+                      >
+                        Production notes
+                      </a>
+                    </div>
+                  </div>
+                </aside>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="how-title">
+              <div class="cs-aside">
+                <span class="cs-number">04</span>
+                <p class="cs-kicker">How it works</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="how-title">Five decisions hold the table together.</h2>
+                <p class="cs-lede">
+                  No physics engine. No model files. No audio files. No hand-placed building. The
+                  whole game is a seed, a fixed step, and a handful of recycled pools.
+                </p>
+
+                <ol class="cs-steps">
+                  <li>
+                    <span class="cs-step-number" aria-hidden="true">01</span>
+                    <div>
+                      <div class="cs-step-head">
+                        <h3>The city is the table.</h3>
+                        <span class="cs-step-meta">9 x 13 grid · 72% density</span>
+                      </div>
+                      <p>
+                        The generator lays out a 9 by 13 grid at 2.45 units, then reserves the
+                        launch lane and three pads before filling the rest at 72 percent density. A
+                        block is a target, a street is a lane, and the plinth gives the whole thing
+                        a physical edge. The city is not decoration around a pinball table. It is
+                        the table.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="cs-step-number" aria-hidden="true">02</span>
+                    <div>
+                      <div class="cs-step-head">
+                        <h3>One string builds the city.</h3>
+                        <span class="cs-step-meta">FNV-1a → mulberry32</span>
+                      </div>
+                      <p>
+                        A seed is hashed with FNV-1a into a 32-bit integer, then mulberry32 turns
+                        that integer into a stream of decisions: is there a building here, how tall
+                        is it, is it fragile or solid or a bumper, which pastel does it get? Same
+                        seed, same city. The seed lives in the URL because it is the city compressed
+                        into a name.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="cs-step-number" aria-hidden="true">03</span>
+                    <div>
+                      <div class="cs-step-head">
+                        <h3>The ball runs at 120 Hz.</h3>
+                        <span class="cs-step-meta">1/120 s step · 8 step cap</span>
+                      </div>
+                      <p>
+                        Gravity pulls the ball down the table, the pointer or keys add a steering
+                        nudge, and the position integrates. At the 40 unit speed cap, a 60 Hz step
+                        would move the ball 0.67 units, twice the 0.35 unit wall. A fixed 120 Hz
+                        step moves it 0.33 units, so no swept collision is needed. At most eight
+                        steps run per frame, so a slow frame cannot spiral.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="cs-step-number" aria-hidden="true">04</span>
+                    <div>
+                      <div class="cs-step-head">
+                        <h3>Destruction is scheduled, not simulated.</h3>
+                        <span class="cs-step-meta">8 neighbors · 40-140 ms · depth 2</span>
+                      </div>
+                      <p>
+                        Buildings have one, two, or three health. Impact damage is impact speed
+                        minus one, times 0.38, with a floor. When a block dies, up to eight
+                        neighbors within three units are queued for 1.05 damage after 40 to 140
+                        milliseconds, and chains can nest two levels deep. The building disappears.
+                        Shards, sparks, dust, and rings do the mourning.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span class="cs-step-number" aria-hidden="true">05</span>
+                    <div>
+                      <div class="cs-step-head">
+                        <h3>Everything is generated.</h3>
+                        <span class="cs-step-meta">~3 draw calls · 1,660 pooled effects</span>
+                      </div>
+                      <p>
+                        The skyline is one instanced mesh with per-seed facade textures. The effects
+                        are fixed pools: 420 shards, 900 sparks, 320 dust motes, 20 rings. The ball
+                        has a procedural chrome environment, and every sound is synthesized with the
+                        Web Audio API. Nothing is loaded from a model, texture, or audio file.
+                      </p>
+                    </div>
+                  </li>
+                </ol>
+
+                <div class="cs-code">
+                  <div class="cs-code-block">
+                    <p class="cs-code-label">The fixed step</p>
+                    <pre><code>let steps = 0;
+accumulator += dt;
+while (accumulator &gt;= 1 / 120 &amp;&amp; steps &lt; 8) {
+  stepBall(1 / 120);
+  accumulator -= 1 / 120;
+  steps += 1;
+}</code></pre>
+                  </div>
+                  <div class="cs-code-block">
+                    <p class="cs-code-label">Sphere against AABB</p>
+                    <pre><code>const closestX = Math.max(min.x, Math.min(position.x, max.x));
+const closestY = Math.max(min.y, Math.min(position.y, max.y));
+const closestZ = Math.max(min.z, Math.min(position.z, max.z));
+
+if (distanceSq &gt; radius * radius) return false;
+
+// Push the ball out, then reflect the normal velocity.
+velocity.addScaledVector(normal, -(1 + restitution) * normalVelocity);</code></pre>
+                  </div>
+                </div>
+
+                <p>
+                  The collision test is the closest point on the box. If the distance is under the
+                  radius, the ball is pushed out along the normal and the normal velocity is
+                  reflected. Buildings use 0.48 restitution, bumpers 0.92. The guides flip the
+                  normal toward the table center, which is why the ball cannot settle in an outlane.
+                </p>
+                <p class="cs-small">
+                  The reasoning behind the custom solver and the seeded generator is in
+                  <a
+                    class="cs-inline-link"
+                    href="https://github.com/jimmerioles/kaiju-pinball/blob/main/docs/adr/0001-custom-arcade-physics.md"
+                    >ADR 0001</a
+                  >
+                  and
+                  <a
+                    class="cs-inline-link"
+                    href="https://github.com/jimmerioles/kaiju-pinball/blob/main/docs/adr/0002-seeded-procedural-city.md"
+                    >ADR 0002</a
+                  >.
+                </p>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="performance-title">
+              <div class="cs-aside">
+                <span class="cs-number">05</span>
+                <p class="cs-kicker">Performance</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="performance-title">Three draw calls for a city.</h2>
+                <p class="cs-lede">
+                  The scene has a fixed budget. The city is one instanced mesh. The effects are
+                  allocated once and recycled. The pixel ratio stops at 1.75. Nothing in the loop
+                  creates a mesh per impact.
+                </p>
+
+                <dl class="cs-stats">
+                  <div>
+                    <dt>Run</dt>
+                    <dd><strong>90 s</strong><span>one timer, three balls</span></dd>
+                  </div>
+                  <div>
+                    <dt>Physics</dt>
+                    <dd><strong>120 Hz</strong><span>fixed substeps</span></dd>
+                  </div>
+                  <div>
+                    <dt>City</dt>
+                    <dd><strong>9 x 13</strong><span>grid cells</span></dd>
+                  </div>
+                  <div>
+                    <dt>Skyline</dt>
+                    <dd><strong>~3</strong><span>draw calls</span></dd>
+                  </div>
+                  <div>
+                    <dt>Effects</dt>
+                    <dd><strong>1,660</strong><span>fixed pool slots</span></dd>
+                  </div>
+                  <div>
+                    <dt>Pixel ratio</dt>
+                    <dd><strong>1.75x</strong><span>hard cap</span></dd>
+                  </div>
+                </dl>
+
+                <p>
+                  Every building shares one box geometry and a material array for sides, roof, and
+                  bottom. The facade texture is 128 by 256, generated per seed, with 4 by 8 windows
+                  and 27 percent lit. Destroyed blocks are hidden by zeroing their instance matrix,
+                  not by changing the instance count. The bumper caps are a second instanced mesh.
+                  The table, rim, and plinth are built once. That is about three draw calls for the
+                  city before lamps, roof details, and the effects pass.
+                </p>
+                <p>
+                  The effects are four fixed pools. A destroyed block spawns 10 shards, 26 sparks,
+                  14 dust motes, and one ring. A glancing hit spawns 14 sparks and 8 dust. A bumper
+                  spawns 34 sparks and two rings. The pools cycle a cursor; when a slot is reused,
+                  the old particle is already dead. The frame never waits on the garbage collector
+                  for a new impact.
+                </p>
+                <p>
+                  Post runs a render pass, UnrealBloom at 0.35 strength, an output pass, and one
+                  vignette and grain shader. ACES tone mapping sits at 0.9 exposure. Shadows are one
+                  2048 directional map. The main risk is bloom on integrated graphics, and the next
+                  performance pass should measure it.
+                </p>
+
+                <div class="cs-note">
+                  <p>
+                    <strong>What this is not.</strong> These are constants and budgets from the
+                    build, not a published benchmark. The target is 60 fps on a mid-range laptop. A
+                    frame trace on integrated graphics is still to come, and the limitations below
+                    say so.
+                  </p>
+                </div>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="feel-title">
+              <div class="cs-aside">
+                <span class="cs-number">06</span>
+                <p class="cs-kicker">Design and feel</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="feel-title">Make the chaos readable.</h2>
+                <p class="cs-lede">
+                  A chrome ball hitting a city could look like a disaster. The art direction keeps
+                  it a toy: warm sunset light, pastel blocks, one large chrome object, and feedback
+                  that arrives in layers.
+                </p>
+
+                <figure class="cs-palette">
+                  <div
+                    class="cs-palette-chart"
+                    role="img"
+                    aria-label="Block palette: seven pastel fragile colors, five muted solid colors, and four bright bumper colors"
+                  >
+                    <div class="cs-palette-row">
+                      <span class="cs-palette-label">Fragile <small>1 hit</small></span>
+                      <span class="cs-swatch" style="--swatch: #f7c9b2"></span>
+                      <span class="cs-swatch" style="--swatch: #a8e0c8"></span>
+                      <span class="cs-swatch" style="--swatch: #f5e0a3"></span>
+                      <span class="cs-swatch" style="--swatch: #c9b8f0"></span>
+                      <span class="cs-swatch" style="--swatch: #a9c9ef"></span>
+                      <span class="cs-swatch" style="--swatch: #f3a7a0"></span>
+                      <span class="cs-swatch" style="--swatch: #dad3c6"></span>
+                    </div>
+                    <div class="cs-palette-row">
+                      <span class="cs-palette-label">Solid <small>3 hits</small></span>
+                      <span class="cs-swatch" style="--swatch: #9a93ad"></span>
+                      <span class="cs-swatch" style="--swatch: #7f9c94"></span>
+                      <span class="cs-swatch" style="--swatch: #b49a83"></span>
+                      <span class="cs-swatch" style="--swatch: #8f8aa4"></span>
+                      <span class="cs-swatch" style="--swatch: #9aa8a0"></span>
+                    </div>
+                    <div class="cs-palette-row">
+                      <span class="cs-palette-label">Bumper <small>2 hits</small></span>
+                      <span class="cs-swatch" style="--swatch: #ffb347"></span>
+                      <span class="cs-swatch" style="--swatch: #ff8a6d"></span>
+                      <span class="cs-swatch" style="--swatch: #9be3ff"></span>
+                      <span class="cs-swatch" style="--swatch: #ffd166"></span>
+                    </div>
+                  </div>
+                  <figcaption>
+                    Palette values from <code>config.ts</code>. The seed picks the color, adds a
+                    small HSL shift, and keeps the block type readable at a glance.
+                  </figcaption>
+                </figure>
+
+                <div class="cs-craft">
+                  <div>
+                    <h3>Diorama first.</h3>
+                    <p>
+                      The table sits on a rounded plinth with a brass rim and corner posts. The
+                      camera is a 38 degree tabletop view with a gentle sway in attract mode. The
+                      city reads as an object you could pick up, which makes the destruction feel
+                      playful instead of grim.
+                    </p>
+                  </div>
+                  <div>
+                    <h3>One chrome object.</h3>
+                    <p>
+                      The ball is the only metal in the scene. It uses a 512 by 256 procedural
+                      equirectangular environment with dark caps, a bright horizon, and a warm sun.
+                      A halo sprite ignores depth so the ball can be found behind a tower, and a
+                      contact shadow keeps it on the table.
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Feedback in layers.</h3>
+                    <p>
+                      Every hit gets sparks and dust. Destruction adds shards and a ground ring. A
+                      bumper adds 34 sparks, two rings, and a camera punch. Trauma decays at 1.7 per
+                      second, and the shake is squared, so small hits stay small and big hits read
+                      big.
+                    </p>
+                  </div>
+                  <div>
+                    <h3>Sound with no files.</h3>
+                    <p>
+                      Impacts combine filtered noise with a sine thump. Bumpers get a triangle ping.
+                      Combos climb a note table. A low wind bed runs underneath, and the audio
+                      context only unlocks after a gesture, so the page stays quiet until the player
+                      asks for sound.
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="access-title">
+              <div class="cs-aside">
+                <span class="cs-number">07</span>
+                <p class="cs-kicker">Accessibility and input</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="access-title">A DOM HUD over a canvas game.</h2>
+                <p class="cs-lede">
+                  Kaiju Pinball is a visual game. The honest accessibility story is not that the
+                  canvas is accessible. It is that the interface around the canvas is real DOM, and
+                  the gaps are named.
+                </p>
+
+                <div class="cs-access">
+                  <div>
+                    <h3 class="cs-access-title">What reaches</h3>
+                    <ul class="cs-list">
+                      <li>
+                        <strong>Keyboard parity.</strong> A and D or the arrow keys steer. Z or left
+                        Shift fires the left flipper. M, slash, or right Shift fires the right.
+                        Space launches.
+                      </li>
+                      <li>
+                        <strong>Pointer parity.</strong> The pointer's horizontal position steers
+                        with a dead zone. A click on the left or right half fires that flipper. On
+                        touch, a drag steers and a tap flips.
+                      </li>
+                      <li>
+                        <strong>Text status.</strong> Score, timer, combo, seed, callouts, and the
+                        end report are DOM text. The callout region is a polite live region, and the
+                        mute button updates its label when the state changes.
+                      </li>
+                      <li>
+                        <strong>Focus is respected.</strong> Space does not hijack a focused button,
+                        so launch, daily run, recent city chips, mute, replay, and same city all
+                        work from the keyboard.
+                      </li>
+                      <li>
+                        <strong>Interface motion has a fallback.</strong> The DOM layer honors
+                        <code>prefers-reduced-motion</code> for its animations and transitions.
+                      </li>
+                    </ul>
+                  </div>
+
+                  <div class="cs-caveat">
+                    <h3 class="cs-access-title">What does not</h3>
+                    <ul class="cs-list cs-list--plain">
+                      <li>
+                        The canvas is <code>aria-hidden</code>. The city, ball, flippers, and
+                        targets are not in the accessibility tree. There is no screen-reader or
+                        audio-only way to play.
+                      </li>
+                      <li>
+                        There is no gamepad support, key remapping, or reduced-motion mode for
+                        camera shake.
+                      </li>
+                      <li>
+                        Block type is communicated by color first. Height and behavior vary, but
+                        there is no non-visual target cue.
+                      </li>
+                      <li>
+                        Touch works, but the mobile layout has not had a real-device gesture and
+                        safe-area pass.
+                      </li>
+                    </ul>
+                  </div>
+                </div>
+
+                <p>
+                  The realistic goal is a reachable interface and an honest boundary, not a claim
+                  that a fast visual game is fully accessible. The next pass should start with a
+                  reduced-motion toggle and a clearer non-color cue for block type.
+                </p>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="limits-title">
+              <div class="cs-aside">
+                <span class="cs-number">08</span>
+                <p class="cs-kicker">Limitations</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="limits-title">What this does not claim.</h2>
+                <p class="cs-lede">
+                  A case study is more useful when it says where the edges are. These are the
+                  current ones.
+                </p>
+
+                <ul class="cs-limits">
+                  <li>
+                    <h3>Arcade physics.</h3>
+                    <p>
+                      Buildings vanish instead of collapsing. Shards are cosmetic, and chain
+                      reactions are scheduled. There is no rigid-body solver and no structural
+                      simulation.
+                    </p>
+                  </li>
+                  <li>
+                    <h3>One theme.</h3>
+                    <p>
+                      The seed changes layout, palette, and window pattern, not the art direction.
+                      Harbor, rooftop garden, and industrial themes are still ideas.
+                    </p>
+                  </li>
+                  <li>
+                    <h3>No frame trace.</h3>
+                    <p>
+                      The performance numbers are constants and budgets from the build, not a
+                      measured benchmark on a known device.
+                    </p>
+                  </li>
+                  <li>
+                    <h3>Local records.</h3>
+                    <p>
+                      Best score and recent cities live in <code>localStorage</code> on one browser.
+                      There is no leaderboard, account, or replay file.
+                    </p>
+                  </li>
+                  <li>
+                    <h3>Visual play.</h3>
+                    <p>
+                      The canvas is hidden from assistive technology. The HUD is reachable. The
+                      playfield is not.
+                    </p>
+                  </li>
+                  <li>
+                    <h3>Mobile, not polished.</h3>
+                    <p>
+                      Drag and tap work. Pinch, haptics, and safe-area behavior on a real phone are
+                      still to be checked.
+                    </p>
+                  </li>
+                </ul>
+              </div>
+            </section>
+
+            <section class="cs-section" aria-labelledby="next-title">
+              <div class="cs-aside">
+                <span class="cs-number">09</span>
+                <p class="cs-kicker">What is next</p>
+              </div>
+              <div class="cs-body">
+                <h2 id="next-title">The next run.</h2>
+                <p class="cs-lede">
+                  The core loop is built. The remaining work is reach, evidence, and a little more
+                  variety.
+                </p>
+
+                <ol class="cs-next">
+                  <li>
+                    <span aria-hidden="true">01</span>
+                    <div>
+                      <h3>More city themes</h3>
+                      <p>
+                        A harbor, a rooftop garden, an industrial district. Each theme needs a
+                        palette, facade rules, and a screenshot.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">02</span>
+                    <div>
+                      <h3>A subtle ball trail</h3>
+                      <p>
+                        A short trail and a stronger occlusion locator would make the ball easier to
+                        follow behind towers.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">03</span>
+                    <div>
+                      <h3>A real mobile pass</h3>
+                      <p>
+                        Pinch, haptics, safe areas, and a gesture check on an actual phone, not a
+                        resized desktop window.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">04</span>
+                    <div>
+                      <h3>A frame trace</h3>
+                      <p>
+                        Measure frame pacing and bloom cost on integrated graphics, then publish the
+                        numbers beside the budgets.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">05</span>
+                    <div>
+                      <h3>A first-run beat</h3>
+                      <p>
+                        One short prompt that teaches launch, steering, and the flippers without
+                        adding a tutorial screen.
+                      </p>
+                    </div>
+                  </li>
+                  <li>
+                    <span aria-hidden="true">06</span>
+                    <div>
+                      <h3>A shareable run card</h3>
+                      <p>Score, rank, and seed as an image, so a run can leave the browser.</p>
+                    </div>
+                  </li>
+                </ol>
+              </div>
+            </section>
+          </div>
+
+          <section class="cs-cta" aria-labelledby="cta-title">
+            <div class="cs-shell cs-cta-inner">
+              <p class="cs-kicker">
+                <span class="cs-kicker-dot" aria-hidden="true"></span>
+                One more run
+              </p>
+              <h2 id="cta-title">
+                A tiny city.<br />
+                <span class="cs-cta-gold">One very large ball.</span>
+              </h2>
+              <p>Ninety seconds. Three balls. A new skyline every time.</p>
+              <div class="cs-actions">
+                <a class="cs-button cs-button--primary" href="./">
+                  <span>Play the city</span>
+                  <svg viewBox="0 0 16 16" class="cs-icon" aria-hidden="true">
+                    <path d="M4.5 11.5 11.5 4.5M5.5 4.5h6v6" />
+                  </svg>
+                </a>
+                <a
+                  class="cs-button cs-button--ghost"
+                  href="https://github.com/jimmerioles/kaiju-pinball"
+                >
+                  <span>Read the source</span>
+                </a>
+              </div>
+            </div>
+          </section>
+        </article>
+      </main>
+
+      <footer class="cs-footer">
+        <div class="cs-shell cs-footer-inner">
+          <div>
+            <p class="cs-footer-mark">Kaiju Pinball</p>
+            <p class="cs-footer-note">
+              A browser toy, not a product. Every mesh, texture, and sound is generated in code.
+              Built with Vite, TypeScript, and three.js.
+            </p>
+          </div>
+          <nav class="cs-footer-links" aria-label="Project links">
+            <a href="./">Play the game</a>
+            <a href="https://github.com/jimmerioles/kaiju-pinball">GitHub</a>
+            <a
+              href="https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4"
+              >Explainer</a
+            >
+            <a href="https://github.com/jimmerioles/kaiju-pinball/blob/main/docs/architecture.md"
+              >Architecture</a
+            >
+            <a href="https://github.com/jimmerioles/kaiju-pinball/blob/main/LICENSE">MIT license</a>
+          </nav>
+        </div>
+        <div class="cs-shell cs-footer-bottom">
+          <span>Built by Jim Merioles · November 2026</span>
+          <a href="#case-study-main">Back to the top</a>
+        </div>
+      </footer>
+    </div>
+  </body>
+</html>
