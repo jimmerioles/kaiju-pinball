@@ -1,16 +1,22 @@
-# Kaiju Pinball
-
-A tiny city, one very large ball, and ninety seconds of beautiful destruction.
-
-[Play the live demo](https://jimmerioles.github.io/kaiju-pinball/)
-
-Read the [case study](https://jimmerioles.github.io/kaiju-pinball/case-study.html): how the table, the city, and the 120 Hz solver fit together.
+<div align="center">
 
 https://github.com/user-attachments/assets/69ba2d5e-c2cc-44e7-9e4d-255021bc5098
 
-A five-minute technical explainer. [1080p download](https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt) · [Production notes](docs/explainer/README.md)
+[![Tests](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/test.yml/badge.svg)](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/test.yml) [![Deploy to GitHub Pages](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/pages.yml/badge.svg)](https://github.com/jimmerioles/kaiju-pinball/actions/workflows/pages.yml)
+
+**Live demo:** https://jimmerioles.github.io/kaiju-pinball/
+
+**Case study:** https://jimmerioles.github.io/kaiju-pinball/case-study.html
+
+</div>
+
+# Kaiju Pinball
+
+**A tiny city, one very large ball, and ninety seconds of beautiful destruction.**
 
 Kaiju Pinball is a browser toy built with three.js for players who want a quick arcade run and developers who like procedural systems. You steer a chrome ball through a seeded miniature city that doubles as a pinball table: buildings are bumpers, streets are lanes, and the flippers sit at the edge of the plinth. Runs last ninety seconds, every seed builds a different city, and the game ships without external models, textures, or audio.
+
+A five-minute technical explainer. [1080p download](https://github.com/jimmerioles/kaiju-pinball/releases/download/v0.1.0/kaiju-pinball-explainer.mp4) · [Captions](docs/video/kaiju-pinball-explainer.srt) · [Production notes](docs/explainer/README.md)
 
 ## Key features
 
